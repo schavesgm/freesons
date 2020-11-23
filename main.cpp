@@ -5,28 +5,74 @@
 #include "Defs.hpp"
 #include "FreeCorr.hpp"
 #include "Flush.hpp"
+#include "Argparser.hpp"
 
 using std::tuple;
+using namespace Argparser;
 
-int main()
+int main(int argc, char* argv[])
 {
-    // Structure containing the parameters of the class
-    Defs defs;
+    // Show help message if the correct flags are present
+    bool Help1 = Check_Flag(argv, argv + argc, "--help");
+    bool Help2 = Check_Flag(argv, argv + argc, "-h");
 
-    // Set the parameters correctly {{{
-    // -- Number of points in the space direction
-    defs.Ns = 64;
-    // -- Number of points in the time direction
-    defs.Nt = 24;
-    // -- Number of colors in the SU quark sector
-    defs.Nc = 3;
-    // -- Mass of the quark in lattice units
-    defs.mq = 0.01;
-    // -- Anysotropy parameter \xi = a_s / a_t
-    defs.xi = 1.0;
+    if (Help1 || Help2) {
+        std::cout <<
+        "    Freesons: "
+        "-Nt [int] -Ns [int] -mq [doub] -Xi [doub]\n"
+        "--\n"
+        "    --help: Show this help message.\n"
+        "    -Nt:    Number of points in the time direction\n"
+        "    -Ns:    Number of points in the spatial direction\n"
+        "    -mq:    Mass of the quarks multiplied by Ns\n"
+        "    -Xi:    Anysotropy factor Xi = as / at\n"
+        "--\n"
+        " Some more parameters, such as the external momenta, the\n"
+        " number of colours Nc and the Wilson parameter in the\n"
+        " spatial direction can be defined inside main.py.\n";
+        return 1;
+    }
+
+    // Check for the existence of several flags
+    bool exNt = Check_Flag(argv, argv + argc, "-Nt");
+    bool exNs = Check_Flag(argv, argv + argc, "-Ns");
+    bool exmq = Check_Flag(argv, argv + argc, "-mq");
+    bool exXi = Check_Flag(argv, argv + argc, "-Xi");
+
+    // If these flags do not exist, terminate the program
+    if (!exNt || !exNs || !exmq || !exXi ) {
+        std::cerr << 
+        "\033[1;31m [ERROR] \033[0mCommand arguments not present\n";
+        return -1;
+    }
+
+    // -- Transform the command line arguments to the correct values
+    // Number of points in the time direction
+    const int Nt = Cast_To<int>(Get_Option(argv, argv + argc, "-Nt"));
+    // Number of points in the spatial directions
+    const int Ns = Cast_To<int>(Get_Option(argv, argv + argc, "-Ns"));
+    // Mass of the quark in lattice units multiplied by Ns
+    const double mqNs = 
+        Cast_To<double>(Get_Option(argv, argv + argc, "-mq"));
+    // Anysotropy factor
+    const double xi =
+        Cast_To<double>(Get_Option(argv, argv + argc, "-Xi"));
+
+    // -- Some other parameters to set
+    // Number of colours in the SU quark sector
+    const int Nc = 3;
     // -- Wilson parameter in the space direction
-    defs.rs = 1.0;
-    // }}}
+    const int rs = 1.0;
+
+    // Structure containing the parameters of the class
+    Defs defs(Nt, Ns, Nc, xi, rs);
+
+    // Calculate the spacing between momenta
+    defs.Calculate_dk(); 
+    // Calculate S0 = Nc * 4 / Ns ** 3
+    defs.Calculate_S0(); 
+    // Transform mq to the correct value
+    defs.Calculate_mq(mqNs);
 
     // Allocate some memory in the heap to obtain the three G
     double* G4 = new double[defs.Nt]{0.0};
@@ -35,9 +81,6 @@ int main()
 
     // Create the tuple to bound the correlators
     TUPLE_3DP G_tuple = std::make_tuple(G4, Gi, Gu);
-
-    // Calculate the spacing between momenta and S0
-    defs.Calculate_dk(); defs.Calculate_S0();
 
     // Set the external momenta
     defs.Set_Pext(0.0, 0.0, 0.0);
