@@ -126,11 +126,5 @@ void FreeCorr::Update_G(
             )
 
         );
-
-        if (nt == 0) {
-            std::cout << G4[0] << " " << Gi[0] << std::endl;
-
-        }
-
     }
 }
