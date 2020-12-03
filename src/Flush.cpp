@@ -4,8 +4,47 @@ void Flush::Flush(
     const char* dir_path, const TUPLE_PTR& G, 
     const Channels& chan, const Defs& D
 ) {
+
+    // Vector defining the constants for the channel
+    double a[3] = {0.0, 0.0, 0.0};
+
+    // Name of the channel to be hold the data
+    std::string chanstr = "";
+
+    // Filepath of the directory to flush the data
+    switch (chan) {
+        case SCALAR: 
+            a[0] = 1.0; a[1] = -1.0; a[2] = 1.0;  chanstr = "1";
+            break;
+        case PSEUDOSCALAR: 
+            a[0] = 1.0; a[1] = -1.0; a[2] = -1.0; chanstr = "g5";
+            break;
+        case VECTOR_0: 
+            a[0] = 1.0; a[1] = 1.0; a[2] = 1.0;   chanstr = "g0";
+            break;
+        case VECTOR_i: 
+            a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;  chanstr = "gi";
+            break;
+        case VECTOR_mu: 
+            a[0] = 2.0; a[1] = -2.0; a[2] = -4.0; chanstr = "gmu";
+            break;
+        case AXIAL_0: 
+            a[0] = 1.0; a[1] = 1.0; a[2] = -1.0;  chanstr = "g5g0";
+            break;
+        case AXIAL_i: 
+            a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;  chanstr = "g5gi";
+            break;
+        case AXIAL_mu: 
+            a[0] = 2.0; a[1] = -2.0; a[2] = 4.0;  chanstr = "g5gmu";
+            break;
+    }
+
+    // Create the directory for the given channel
+    std::string dir_chan = std::string(dir_path) + "/" + chanstr;
+
     // Create the directory in dir_path if it does not exist
     mkdir(dir_path, 0777);
+    mkdir(dir_chan.c_str(), 0777);
 
     // Create the file name for the given channel
     char file_name[100];
@@ -13,34 +52,11 @@ void Flush::Flush(
     // Modify the file name to include some key information
     sprintf(
         file_name, "%s/G_t%d_s%d_c%d_m%.4f.dat",
-        dir_path, D.Nt, D.Ns, chan, D.mq
+        dir_chan.c_str(), D.Nt, D.Ns, chan, D.mq
     );
-
-    // Vector defining the constants for the channel
-    double a[3] = {0.0, 0.0, 0.0};
 
     // Structure binding of the correlator parts
     const auto& [G4, Gi, Gu] = G;
-
-    // Select the correct a vector depending on the channel
-    switch (chan) {
-        case SCALAR: 
-            a[0] = 1.0; a[1] = -1.0; a[2] = 1.0;   break;
-        case PSEUDOSCALAR: 
-            a[0] = 1.0; a[1] = -1.0; a[2] = -1.0;  break;
-        case VECTOR_0: 
-            a[0] = 1.0; a[1] = 1.0; a[2] = 1.0;    break;
-        case VECTOR_i: 
-            a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;   break;
-        case VECTOR_mu: 
-            a[0] = 2.0; a[1] = -2.0; a[2] = -4.0;  break;
-        case AXIAL_0: 
-            a[0] = 1.0; a[1] = 1.0; a[2] = -1.0;   break;
-        case AXIAL_i: 
-            a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;   break;
-        case AXIAL_mu: 
-            a[0] = 2.0; a[1] = -2.0; a[2] = 4.0;   break;
-    }
 
     // Open a stream to flush the data out
     std::ofstream out(file_name);
