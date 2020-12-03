@@ -67,6 +67,9 @@ int main(int argc, char* argv[])
     // Structure containing the parameters of the class
     Defs defs(Nt, Ns, Nc, xi, rs);
 
+    // Set the external momenta
+    defs.Set_Pext(0.0, 0.0, 0.0);
+
     // Calculate the spacing between momenta
     defs.Calculate_dk(); 
     // Calculate S0 = Nc * 4 / Ns ** 3
@@ -81,9 +84,6 @@ int main(int argc, char* argv[])
 
     // Create the tuple to bound the correlators
     TUPLE_3DP G_tuple = std::make_tuple(G4, Gi, Gu);
-
-    // Set the external momenta
-    defs.Set_Pext(0.0, 0.0, 0.0);
 
     // Array with momenta -- Three forward and three backwards
     double K[6];
