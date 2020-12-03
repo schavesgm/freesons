@@ -47,23 +47,25 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    // Minor alis to clean the code
+    using CINT = const int;
+    using CDOB = const double;
+
     // -- Transform the command line arguments to the correct values
     // Number of points in the time direction
-    const int Nt = Cast_To<int>(Get_Option(argv, argv + argc, "-Nt"));
+    CINT Nt = Cast_To<int>(Get_Option(argv, argv + argc, "-Nt"));
     // Number of points in the spatial directions
-    const int Ns = Cast_To<int>(Get_Option(argv, argv + argc, "-Ns"));
+    CINT Ns = Cast_To<int>(Get_Option(argv, argv + argc, "-Ns"));
     // Mass of the quark in lattice units
-    const double mq = 
-        Cast_To<double>(Get_Option(argv, argv + argc, "-mq"));
+    CDOB mq = Cast_To<double>(Get_Option(argv, argv + argc, "-mq"));
     // Anysotropy factor
-    const double xi =
-        Cast_To<double>(Get_Option(argv, argv + argc, "-Xi"));
+    CDOB xi = Cast_To<double>(Get_Option(argv, argv + argc, "-Xi"));
 
     // -- Some other parameters to set
     // Number of colours in the SU quark sector
-    const int Nc = 3;
+    CINT Nc = 3;
     // -- Wilson parameter in the space direction
-    const int rs = 1.0;
+    CINT rs = 1.0;
 
     // Structure containing the parameters of the class
     Defs defs(Nt, Ns, Nc, xi, rs, mq);
