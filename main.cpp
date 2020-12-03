@@ -12,6 +12,7 @@ using namespace Argparser;
 
 int main(int argc, char* argv[])
 {
+    std::cout.precision(11);
     // Show help message if the correct flags are present
     bool Help1 = Check_Flag(argv, argv + argc, "--help");
     bool Help2 = Check_Flag(argv, argv + argc, "-h");
@@ -22,10 +23,10 @@ int main(int argc, char* argv[])
         "-Nt [int] -Ns [int] -mq [doub] -Xi [doub]\n"
         "--\n"
         "    --help: Show this help message.\n"
-        "    -Nt:    Number of points in the time direction\n"
-        "    -Ns:    Number of points in the spatial direction\n"
-        "    -mq:    Mass of the quarks multiplied by Ns\n"
-        "    -Xi:    Anysotropy factor Xi = as / at\n"
+        "    -Nt:    Number of points in the time direction.\n"
+        "    -Ns:    Number of points in the spatial direction.\n"
+        "    -mq:    Mass of the quarks in lattice units.\n"
+        "    -Xi:    Anysotropy factor Xi = as / at.\n"
         "--\n"
         " Some more parameters, such as the external momenta, the\n"
         " number of colours Nc and the Wilson parameter in the\n"
@@ -51,8 +52,8 @@ int main(int argc, char* argv[])
     const int Nt = Cast_To<int>(Get_Option(argv, argv + argc, "-Nt"));
     // Number of points in the spatial directions
     const int Ns = Cast_To<int>(Get_Option(argv, argv + argc, "-Ns"));
-    // Mass of the quark in lattice units multiplied by Ns
-    const double mqNs = 
+    // Mass of the quark in lattice units
+    const double mq = 
         Cast_To<double>(Get_Option(argv, argv + argc, "-mq"));
     // Anysotropy factor
     const double xi =
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
     const int rs = 1.0;
 
     // Structure containing the parameters of the class
-    Defs defs(Nt, Ns, Nc, xi, rs);
+    Defs defs(Nt, Ns, Nc, xi, rs, mq);
 
     // Set the external momenta
     defs.Set_Pext(0.0, 0.0, 0.0);
@@ -74,8 +75,6 @@ int main(int argc, char* argv[])
     defs.Calculate_dk(); 
     // Calculate S0 = Nc * 4 / Ns ** 3
     defs.Calculate_S0(); 
-    // Transform mq to the correct value
-    defs.Calculate_mq(mqNs);
 
     // Allocate some memory in the heap to obtain the three G
     double* G4 = new double[defs.Nt]{0.0};
@@ -123,12 +122,12 @@ int main(int argc, char* argv[])
     // Flush the scalar channel
     Flush::Flush("./out", G_tuple, SCALAR, defs);
     Flush::Flush("./out", G_tuple, PSEUDOSCALAR, defs);
-    Flush::Flush("./out", G_tuple, VECTOR_0, defs);
-    Flush::Flush("./out", G_tuple, VECTOR_i, defs);
-    Flush::Flush("./out", G_tuple, VECTOR_mu, defs);
-    Flush::Flush("./out", G_tuple, AXIAL_0, defs);
-    Flush::Flush("./out", G_tuple, AXIAL_i, defs);
-    Flush::Flush("./out", G_tuple, AXIAL_mu, defs);
+    // Flush::Flush("./out", G_tuple, VECTOR_0, defs);
+    // Flush::Flush("./out", G_tuple, VECTOR_i, defs);
+    // Flush::Flush("./out", G_tuple, VECTOR_mu, defs);
+    // Flush::Flush("./out", G_tuple, AXIAL_0, defs);
+    // Flush::Flush("./out", G_tuple, AXIAL_i, defs);
+    // Flush::Flush("./out", G_tuple, AXIAL_mu, defs);
 
     // Delete the heap allocated pointers of the correlators
     delete[] G4;

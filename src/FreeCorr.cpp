@@ -1,5 +1,7 @@
 #include "FreeCorr.hpp"
 
+#include <iostream>
+
 TUPLE_6D FreeCorr::Calculate_MEeps(double* K, const Defs& D)
 {
     // References to the forward and backward momenta
@@ -41,10 +43,13 @@ TUPLE_3D FreeCorr::Calculate_Ssq(
     // Structure binding Mk, Ek and epsilon
     const auto& [Mkf, Mkb, Ekf, Ekb, epsf, epsb] = MEeps;
 
-    // Calculate the S0  / (2 * eps_k * cosh(Ek * 0.5 * Nt)
+    // Define a xT = 2 * Xi / Nt = 2 * Xi * T
+    double xT = (2 * D.xi) / D.Nt;
+
+    // Calculate the S0  / (2 * eps_k * cosh(Ek / xT)) ** 2
     double S0_k = D.S0 / (
-            (2.0 * epsf * cosh(Ekf * 0.5 * D.Nt)) * 
-            (2.0 * epsb * cosh(Ekb * 0.5 * D.Nt))
+            (2.0 * epsf * cosh(Ekf / xT)) * 
+            (2.0 * epsb * cosh(Ekb / xT))
         );
 
     // References to the forward and backward momenta
@@ -81,11 +86,14 @@ void FreeCorr::Update_G(
     // Structure bindings for the correlators to be updated
     auto& [G4, Gi, Gu] = G;
 
+    // Define a xT = 2 * Xi / Nt = 2 * Xi * T
+    double xT = (2 * D.xi) / D.Nt;
+
     // Iterate through all times to update the data
     for (int nt = 0; nt < D.Nt; nt++) {
 
         // Calculate the correct tau tilde
-        double ttilde = (nt - 0.5 * D.Nt) / D.xi;
+        double ttilde = (1.0 * nt - 0.5 * D.Nt) / D.xi;
 
         // Delta function \delta_t0
         int delta = nt == 0 ? 1 : 0;
@@ -108,15 +116,21 @@ void FreeCorr::Update_G(
             // Forward sinh term times backward delta term
             (sinh(ttilde * Ekb) / (2.0 * (1.0 + Mkf))) * (
                 (1.0 - cosh(Ekb / D.xi) + Mkb) / 
-                (2.0 * epsb * cosh(Ekb * 0.5 * D.Nt))
+                (2.0 * epsb * cosh(Ekb / xT))
             ) +
 
             // Forward delta term times backward sinh term
             (sinh(ttilde * Ekf) / (2.0 * (1.0 + Mkf))) * (
                 (1.0 - cosh(Ekf / D.xi) + Mkf) /
-                (2.0 * epsf * cosh(Ekf * 0.5 * D.Nt))
+                (2.0 * epsf * cosh(Ekf / xT))
             )
 
         );
+
+        if (nt == 0) {
+            std::cout << G4[0] << " " << Gi[0] << std::endl;
+
+        }
+
     }
 }
