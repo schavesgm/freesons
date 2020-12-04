@@ -96,7 +96,7 @@ void FreeCorr::Update_G(
         double ttilde = (1.0 * nt - 0.5 * D.Nt) / D.xi;
 
         // Delta function \delta_t0
-        int delta = nt == 0 ? 1 : 0;
+        bool delta = nt == 0 ? true : false;
 
         // Update the correlator related to G4
         G4[nt] += S4_sq * cosh(ttilde * Ekf) * cosh(ttilde * Ekb);
@@ -124,7 +124,7 @@ void FreeCorr::Update_G(
                 (1.0 - cosh(Ekf / D.xi) + Mkf) /
                 (2.0 * epsf * cosh(Ekf / xT))
             )
-
         );
+
     }
 }
