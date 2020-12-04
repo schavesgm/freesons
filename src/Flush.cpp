@@ -23,7 +23,7 @@ void Flush::Flush(
             a[0] = 1.0; a[1] = 1.0; a[2] = 1.0;   chanstr = "g0";
             break;
         case VECTOR_i: 
-            a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;  chanstr = "gi";
+            a[0] = 3.0; a[1] = -1.0; a[2] = -3.0;  chanstr = "gi";
             break;
         case VECTOR_mu: 
             a[0] = 2.0; a[1] = -2.0; a[2] = -4.0; chanstr = "gu";
