@@ -51,8 +51,8 @@ void Flush::Flush(
 
     // Modify the file name to include some key information
     sprintf(
-        file_name, "%s/G_t%d_s%d_c%d_m%.4f.dat",
-        dir_chan.c_str(), D.Nt, D.Ns, chan, D.mq
+        file_name, "%s/G_t%d_s%d_c%d_m%.4f_x%.4f.dat",
+        dir_chan.c_str(), D.Nt, D.Ns, chan, D.mq, D.xi
     );
 
     // Structure binding of the correlator parts
