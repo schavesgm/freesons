@@ -26,7 +26,7 @@ void Flush::Flush(
             a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;  chanstr = "gi";
             break;
         case VECTOR_mu: 
-            a[0] = 2.0; a[1] = -2.0; a[2] = -4.0; chanstr = "gmu";
+            a[0] = 2.0; a[1] = -2.0; a[2] = -4.0; chanstr = "gu";
             break;
         case AXIAL_0: 
             a[0] = 1.0; a[1] = 1.0; a[2] = -1.0;  chanstr = "g5g0";
@@ -35,7 +35,7 @@ void Flush::Flush(
             a[0] = 3.0; a[1] = -1.0; a[2] = 3.0;  chanstr = "g5gi";
             break;
         case AXIAL_mu: 
-            a[0] = 2.0; a[1] = -2.0; a[2] = 4.0;  chanstr = "g5gmu";
+            a[0] = 2.0; a[1] = -2.0; a[2] = 4.0;  chanstr = "g5gu";
             break;
     }
 
@@ -51,8 +51,8 @@ void Flush::Flush(
 
     // Modify the file name to include some key information
     sprintf(
-        file_name, "%s/G_t%d_s%d_c%d_m%.4f_x%.4f.dat",
-        dir_chan.c_str(), D.Nt, D.Ns, chan, D.mq, D.xi
+        file_name, "%s/G_%s_t%d_s%d_m%.4f_x%.4f.dat",
+        dir_chan.c_str(), chanstr.c_str(), D.Nt, D.Ns, D.mq, D.xi
     );
 
     // Structure binding of the correlator parts

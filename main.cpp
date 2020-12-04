@@ -124,12 +124,12 @@ int main(int argc, char* argv[])
     // Flush the scalar channel
     Flush::Flush("./out", G_tuple, SCALAR, defs);
     Flush::Flush("./out", G_tuple, PSEUDOSCALAR, defs);
-    // Flush::Flush("./out", G_tuple, VECTOR_0, defs);
-    // Flush::Flush("./out", G_tuple, VECTOR_i, defs);
-    // Flush::Flush("./out", G_tuple, VECTOR_mu, defs);
-    // Flush::Flush("./out", G_tuple, AXIAL_0, defs);
-    // Flush::Flush("./out", G_tuple, AXIAL_i, defs);
-    // Flush::Flush("./out", G_tuple, AXIAL_mu, defs);
+    Flush::Flush("./out", G_tuple, VECTOR_0, defs);
+    Flush::Flush("./out", G_tuple, VECTOR_i, defs);
+    Flush::Flush("./out", G_tuple, VECTOR_mu, defs);
+    Flush::Flush("./out", G_tuple, AXIAL_0, defs);
+    Flush::Flush("./out", G_tuple, AXIAL_i, defs);
+    Flush::Flush("./out", G_tuple, AXIAL_mu, defs);
 
     // Delete the heap allocated pointers of the correlators
     delete[] G4;
