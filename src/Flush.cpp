@@ -51,7 +51,7 @@ void Flush::Flush(
 
     // Modify the file name to include some key information
     sprintf(
-        file_name, "%s/G_%s_t%d_s%d_m%.4f_x%.4f.dat",
+        file_name, "%s/G_%s_t%d_s%d_m%.10f_x%.5f.dat",
         dir_chan.c_str(), chanstr.c_str(), D.Nt, D.Ns, D.mq, D.xi
     );
 
