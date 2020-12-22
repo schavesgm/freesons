@@ -27,6 +27,7 @@ int main(int argc, char* argv[])
         "    -Ns:    Number of points in the spatial direction.\n"
         "    -mq:    Mass of the quarks in lattice units.\n"
         "    -Xi:    Anysotropy factor Xi = as / at.\n"
+        "    -rs:    Wilson r-parameter in the spatial direction.\n"
         "--\n"
         " Some more parameters, such as the external momenta, the\n"
         " number of colours Nc and the Wilson parameter in the\n"
@@ -39,9 +40,10 @@ int main(int argc, char* argv[])
     bool exNs = Check_Flag(argv, argv + argc, "-Ns");
     bool exmq = Check_Flag(argv, argv + argc, "-mq");
     bool exXi = Check_Flag(argv, argv + argc, "-Xi");
+    bool exrs = Check_Flag(argv, argv + argc, "-rs");
 
     // If these flags do not exist, terminate the program
-    if (!exNt || !exNs || !exmq || !exXi ) {
+    if (!exNt || !exNs || !exmq || !exXi || !exrs) {
         std::cerr << 
         "\033[1;31m [ERROR] \033[0mCommand arguments not present\n";
         return -1;
@@ -60,12 +62,12 @@ int main(int argc, char* argv[])
     CDOB mq = Cast_To<double>(Get_Option(argv, argv + argc, "-mq"));
     // Anysotropy factor
     CDOB xi = Cast_To<double>(Get_Option(argv, argv + argc, "-Xi"));
+    // Wilson r-parameter in the spatial direction
+    CDOB rs = Cast_To<double>(Get_Option(argv, argv + argc, "-rs"));
 
     // -- Some other parameters to set
     // Number of colours in the SU quark sector
     CINT Nc = 3;
-    // -- Wilson parameter in the space direction
-    CINT rs = 1.0;
 
     // Structure containing the parameters of the class
     Defs defs(Nt, Ns, Nc, xi, rs, mq);
