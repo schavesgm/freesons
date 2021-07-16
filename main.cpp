@@ -12,7 +12,9 @@ using namespace Argparser;
 
 int main(int argc, char* argv[])
 {
+    // Set the precision of the standard output
     std::cout.precision(11);
+
     // Show help message if the correct flags are present
     bool Help1 = Check_Flag(argv, argv + argc, "--help");
     bool Help2 = Check_Flag(argv, argv + argc, "-h");
@@ -77,6 +79,7 @@ int main(int argc, char* argv[])
 
     // Calculate the spacing between momenta
     defs.Calculate_dk(); 
+
     // Calculate S0 = Nc * 4 / Ns ** 3
     defs.Calculate_S0(); 
 
@@ -133,7 +136,7 @@ int main(int argc, char* argv[])
     Flush::Flush("./out", G_tuple, AXIAL_i, defs);
     Flush::Flush("./out", G_tuple, AXIAL_mu, defs);
 
-    // Delete the heap allocated pointers of the correlators
+    // Delete the heap allocated pointers
     delete[] G4;
     delete[] Gi;
     delete[] Gu;
